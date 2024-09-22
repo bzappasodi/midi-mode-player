@@ -4,6 +4,8 @@ import ModePlayHooks from "../hooks/ModePlayHooks";
 import Select from "../Select/Select";
 import FormButton from "../FormButton/FormButton";
 
+const keyChoices = ["A", "B", "C", "D", "E", "F", "G"];
+const modeChoices = ["Dorian", "Ionian", "Phrygian", "Lydian", "Mixolydian", "Aeolian", "Locrian"];
 
 const Player = () => {
     const {
@@ -19,45 +21,18 @@ const Player = () => {
     } = ModePlayHooks();
 
 
-    const handleKeySelectChange = (e) => {
-        setSelectedKey(e.target.value);
-        setButtonDisabled(false)
-
+    const handleSelectChange = () => (e) => {
+        e.target.name === 'selectedKey' && setButtonDisabled(false);
     };
 
-    const handleModeSelectChange = (e) => {
-        setSelectedMode(e.target.value);
-    };
 
     const handleSubmit = (e) => {
         e.preventDefault();
         setStatus(STATUS.SUBMITTING);
-        setButtonDisabled(true)
-        console.log("Selected mode:", selectedMode);
-        console.log("Selected key:", selectedKey);
+        setButtonDisabled(true);
+
     };
 
-    console.log("status " + status)
-
-    const keyChoices = [
-        "A",
-        "B",
-        "C",
-        "D",
-        "E",
-        "F",
-        "G"
-    ]
-
-    const modeChoices = [
-        "Dorian",
-        "Ionian",
-        "Phrygian",
-        "Lydian",
-        "Mixolydian",
-        "Aeolian",
-        "Locrian"
-    ]
 
     return (
         <form onSubmit={handleSubmit} noValidate>
@@ -67,17 +42,17 @@ const Player = () => {
                     name="selectedMode"
                     value={selectedMode}
                     options={modeChoices}
-                    onChange={handleModeSelectChange}
+                    onChange={handleSelectChange([setSelectedMode])}
                 />
                 <Select
                     label="Select Key"
                     name="selectedKey"
                     value={selectedKey}
                     options={keyChoices}
-                    onChange={handleKeySelectChange}
+                    onChange={handleSelectChange([setSelectedKey])}
                 />
                 <FormButton
-                    isSubmitting={status === "SUBMITTING"}
+                    isSubmitting={status === STATUS.SUBMITTING}
                     disabled={buttonDisabled}
                     text="Play your mode!"
                 />
@@ -85,6 +60,5 @@ const Player = () => {
         </form>
     );
 }
-
 
 export default Player;

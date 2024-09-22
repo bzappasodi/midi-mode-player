@@ -3,15 +3,17 @@ import './App.css';
 import Footer from "./components/Footer/Footer";
 import Header from "./components/Header/Header";
 import Player from "./components/Player/Player";
+import { MIDIProvider } from '@react-midi/hooks'
 
 function App() {
 
     return (
-        <>
-            <Header/>
+        <MIDIProvider>
+
+        <Header/>
             <Player/>
             <Footer/>
-        </>
+        </MIDIProvider>
     );
 }
 
