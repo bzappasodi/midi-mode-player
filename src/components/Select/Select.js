@@ -3,7 +3,7 @@ import React from "react";
 function Select({ label, name, value, options, onChange, defaultOptionText }) {
     return (
         <label>
-            {label}
+            {label}:
             <select name={name} value={value} onChange={onChange}>
                 <option value="">{defaultOptionText}</option>
                 {options.map((option, index) => (
