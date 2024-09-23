@@ -16,9 +16,7 @@ const ModePlayHooks = () => {
     const [buttonDisabled, setButtonDisabled] = useState(true);
 
 
-
-
-    return{
+    return {
         status, setStatus,
         selectedKey,
         setSelectedKey,

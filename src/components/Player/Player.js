@@ -21,44 +21,62 @@ const Player = () => {
     } = ModePlayHooks();
 
 
-    const handleSelectChange = () => (e) => {
-        e.target.name === 'selectedKey' && setButtonDisabled(false);
-    };
+    const handleSelectChange = (setters) => (e) => {
 
+        const {value} = e.target;
+
+        // Update all the setters with the new value
+        setters.forEach(setter => setter(value));
+
+        // Enable the button if either selectedMode or selectedKey is not empty
+        if (selectedMode || selectedKey) {
+            setButtonDisabled(false);
+        }
+    };
 
     const handleSubmit = (e) => {
         e.preventDefault();
         setStatus(STATUS.SUBMITTING);
         setButtonDisabled(true);
+        setSelectedMode('');
+        setSelectedKey('');
 
     };
-
 
     return (
         <form onSubmit={handleSubmit} noValidate>
             <FormControl>
-                <Select
-                    label="Select Mode"
-                    name="selectedMode"
-                    value={selectedMode}
-                    options={modeChoices}
-                    onChange={handleSelectChange([setSelectedMode])}
-                />
-                <Select
-                    label="Select Key"
-                    name="selectedKey"
-                    value={selectedKey}
-                    options={keyChoices}
-                    onChange={handleSelectChange([setSelectedKey])}
-                />
-                <FormButton
-                    isSubmitting={status === STATUS.SUBMITTING}
-                    disabled={buttonDisabled}
-                    text="Play your mode!"
-                />
+                <div>
+                    <Select
+                        label="Select Mode"
+                        name="selectedMode"
+                        defaultOptionText="Please select mode"
+                        value={selectedMode}
+                        options={modeChoices}
+                        onChange={handleSelectChange([setSelectedMode])}
+                    />
+                </div>
+                <div>
+                    <Select
+                        label="Select Key"
+                        name="selectedKey"
+                        defaultOptionText="Please select key"
+                        value={selectedKey}
+                        options={keyChoices}
+                        onChange={handleSelectChange([setSelectedKey])}
+                    />
+                </div>
+                <div>
+                    <FormButton
+                        isSubmitting={status === STATUS.SUBMITTING}
+                        disabled={buttonDisabled}
+                        text="Play your mode!"
+                    />
+                </div>
             </FormControl>
         </form>
     );
 }
+
 
 export default Player;

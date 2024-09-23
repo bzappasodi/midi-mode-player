@@ -1,13 +1,15 @@
 import React from 'react'
 
-
 const Footer = () => {
 
+    let footerText = 'Zapp\'s Midi Mode player';
 
     return (
-        <footer className="page-footer">
-            &#169; Midi Mode player
-        </footer>
+        <div>
+            <footer className="page-footer">
+                {footerText}
+            </footer>
+        </div>
     )
 
 }

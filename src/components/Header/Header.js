@@ -6,9 +6,11 @@ const Header = () => {
     let headerText = "MIDI Mode player";
 
     return (
-        <header className="page-header">
-            <h1>{headerText}</h1>
-        </header>
+        <div>
+            <header className="page-header">
+                <h1>{headerText}</h1>
+            </header>
+        </div>
     )
 
 }
