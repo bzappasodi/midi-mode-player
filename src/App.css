@@ -1,82 +1,154 @@
+/* Reset the broken global div rule and set a solid base */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
 body {
-    text-align: center;
-    font-family: Verdana, serif;
-    font-size: 1em;
-    font-weight: 500;
-    display: flex;
-    flex-direction: column;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-}
-
-.page-header {
-    height: 8rem;
-}
-
-.page-header h1 {
-    padding-top: 25px;
-}
-
-main {
-    display: flex;
-}
-
-article {
-    flex: 2 2 12em;
-}
-
-.aboutText {
-    text-align: justify;
-}
-
-nav, aside {
-    flex: 1;
-}
-
-.text-link {
-    color: inherit;
-    text-decoration: inherit;
-}
-
-.content-navigation {
-    display: flex;
-    flex-direction: column;
-}
-
-ul {
-    list-style-type: none;
-    font-weight: bold;
     margin: 0;
-    padding: 0;
-    color: red;
-}
-
-.alert {
-    color: red;
-}
-
-@media screen and (max-width: 500px) {
-    main {
-        flex-direction: column;
-    }
-}
-
-.page-content {
-    text-align: center;
-    color: blue;
-}
-
-h1 {
-    color: red;
+    min-height: 100vh;
+    font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+    background: linear-gradient(145deg, #0f0f1a 0%, #1a1a2e 50%, #16213e 100%);
+    color: #e8e8f0;
+    -webkit-font-smoothing: antialiased;
 }
 
 .flex-container {
     display: flex;
     flex-direction: column;
+    min-height: 100vh;
+    max-width: 480px;
+    margin: 0 auto;
+    padding: 1.5rem 1.25rem;
 }
 
-div {
-    width: 350px;
-    height: 150px;
+/* Header */
+.page-header {
+    text-align: center;
+    padding: 1.5rem 0 0.5rem;
 }
 
+.page-header h1 {
+    margin: 0;
+    font-size: 1.75rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    background: linear-gradient(90deg, #7c9cff, #c084fc);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.page-header .subtitle {
+    margin: 0.4rem 0 0;
+    font-size: 0.9rem;
+    color: #9ca3af;
+}
+
+/* Player card */
+.player-card {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin: 1.5rem 0;
+}
+
+.player-card form {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 16px;
+    padding: 1.75rem 1.5rem;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
+    backdrop-filter: blur(8px);
+}
+
+.field {
+    margin-bottom: 1.25rem;
+}
+
+.field label {
+    display: block;
+    margin-bottom: 0.4rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #a5b4fc;
+}
+
+.field select {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+    color: #e8e8f0;
+    background: rgba(0, 0, 0, 0.35);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 10px;
+    outline: none;
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23a5b4fc' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.field select:hover,
+.field select:focus {
+    border-color: #7c9cff;
+    box-shadow: 0 0 0 3px rgba(124, 156, 255, 0.2);
+}
+
+.field select option {
+    background: #1a1a2e;
+    color: #e8e8f0;
+}
+
+.play-btn-wrap {
+    margin-top: 0.5rem;
+}
+
+.play-btn-wrap button {
+    width: 100%;
+    padding: 0.9rem 1.25rem;
+    font-size: 1.05rem;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    color: #0f0f1a;
+    background: linear-gradient(135deg, #7c9cff, #a78bfa);
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: transform 0.15s, box-shadow 0.15s, opacity 0.15s;
+}
+
+.play-btn-wrap button:hover:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(124, 156, 255, 0.4);
+}
+
+.play-btn-wrap button:active:not(:disabled) {
+    transform: translateY(0);
+}
+
+.play-btn-wrap button:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+}
+
+.audio-hint {
+    margin: 1rem 0 0;
+    font-size: 0.8rem;
+    color: #6b7280;
+    text-align: center;
+}
+
+/* Footer */
+.page-footer {
+    text-align: center;
+    padding: 1rem 0;
+    font-size: 0.8rem;
+    color: #6b7280;
+}

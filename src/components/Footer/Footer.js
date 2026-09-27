@@ -1,16 +1,9 @@
-import React from 'react'
+import React from "react";
 
-const Footer = () => {
+const Footer = () => (
+    <footer className="page-footer">
+        Zapp&apos;s MIDI Mode Player
+    </footer>
+);
 
-    let footerText = 'Zapp\'s Midi Mode player';
-
-    return (
-        <div>
-            <footer className="page-footer">
-                {footerText}
-            </footer>
-        </div>
-    )
-
-}
 export default Footer;

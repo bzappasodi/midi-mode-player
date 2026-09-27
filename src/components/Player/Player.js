@@ -81,9 +81,9 @@ const Player = () => {
     };
 
     return (
-        <form onSubmit={handleSubmit} noValidate>
-            <FormControl>
-                <div>
+        <div className="player-card">
+            <form onSubmit={handleSubmit} noValidate>
+                <div className="field">
                     <Select
                         label="Select Mode"
                         name="selectedMode"
@@ -96,7 +96,7 @@ const Player = () => {
                         }}
                     />
                 </div>
-                <div>
+                <div className="field">
                     <Select
                         label="Select Key"
                         name="selectedKey"
@@ -109,20 +109,20 @@ const Player = () => {
                         }}
                     />
                 </div>
-                <div>
+                <div className="play-btn-wrap">
                     <FormButton
                         isSubmitting={status === STATUS.SUBMITTING}
                         disabled={!bothSelected || buttonDisabled}
                         text="Play your mode!"
                     />
                 </div>
-            </FormControl>
-            {!audioReady && (
-                <p style={{ fontSize: "0.85rem", color: "#666" }}>
-                    Click Play to start audio (browser requirement).
-                </p>
-            )}
-        </form>
+                {!audioReady && (
+                    <p className="audio-hint">
+                        Click Play to start audio (browser requirement).
+                    </p>
+                )}
+            </form>
+        </div>
     );
 };
 
