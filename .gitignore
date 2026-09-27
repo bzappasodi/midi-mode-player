@@ -19,6 +19,8 @@
 .env.production.local
 yarn.lock
 
+to-do.txt
+
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*

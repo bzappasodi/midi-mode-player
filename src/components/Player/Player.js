@@ -1,16 +1,25 @@
-import React, {useState} from "react";
-import FormControl from '@mui/material/FormControl';
-import ModePlayHooks from "../hooks/ModePlayHooks";
+import React, { useEffect, useRef, useState } from "react";
+import FormControl from "@mui/material/FormControl";
+import * as Tone from "tone";
 import Select from "../Select/Select";
 import FormButton from "../FormButton/FormButton";
-import MidiComponent from "../MidiComponent/MidiComponent";
-import MidiGenerator from "../MidiGenerator/MidiGenerator";
+import ModePlayHooks from "../hooks/ModePlayHooks";
+import { getScaleNotes, midiToNoteName } from "../../utils/modes"; // adjust path if needed
 
 const keyChoices = ["A", "B", "C", "D", "E", "F", "G"];
-const modeChoices = ["Dorian", "Ionian", "Phrygian", "Lydian", "Mixolydian", "Aeolian", "Locrian"];
-const setShowMidiGenerator = "foobar"
+const modeChoices = [
+    "Dorian",
+    "Ionian",
+    "Phrygian",
+    "Lydian",
+    "Mixolydian",
+    "Aeolian",
+    "Locrian",
+];
+
 const Player = () => {
-    const [showMidiGenerator, setShowMidiGenerator] = useState(false);
+    const synthRef = useRef(null);
+    const [audioReady, setAudioReady] = useState(false);
 
     const {
         status,
@@ -24,29 +33,51 @@ const Player = () => {
         setButtonDisabled,
     } = ModePlayHooks();
 
+    // Create a plucky / guitar-ish synth once
+    useEffect(() => {
+        // Tone.PluckSynth is a simple physical-model guitar-ish sound
+        // Alternatives: Tone.Synth, Tone.PolySynth, or a Sampler with real samples
+        synthRef.current = new Tone.PluckSynth({
+            attackNoise: 1,
+            dampening: 4000,
+            resonance: 0.7,
+        }).toDestination();
 
-    const handleSelectChange = (setters) => (e) => {
+        return () => {
+            if (synthRef.current) {
+                synthRef.current.dispose();
+            }
+        };
+    }, []);
 
-        const {value} = e.target;
-        console.log("value ", value)
-        // Update all the setters with the new value
-        setters.forEach(setter => setter(value));
+    const bothSelected = selectedMode !== "" && selectedKey !== "";
 
-        // Enable the button if either selectedMode or selectedKey is not empty
-        if (selectedMode || selectedKey) {
-            setButtonDisabled(false);
-        }
-    };
-
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        setStatus(STATUS.SUBMITTING);
-        // <MidiGenerator noteNumber={60}/>
-        // <MidiComponent message={{'command': '144', 'note': '45', 'velocity':'50'}}/>
-        setButtonDisabled(true);
-        setSelectedMode('');
-        setSelectedKey('');
+        if (!bothSelected || !synthRef.current) return;
 
+        // Browsers require a user gesture to start audio
+        await Tone.start();
+        setAudioReady(true);
+
+        setStatus(STATUS.SUBMITTING);
+        setButtonDisabled(true);
+
+        const midiNotes = getScaleNotes(selectedKey, selectedMode);
+        const noteNames = midiNotes.map(midiToNoteName);
+        const duration = 0.5; // seconds per note
+        const now = Tone.now();
+
+        noteNames.forEach((note, i) => {
+            synthRef.current.triggerAttackRelease(note, duration, now + i * duration);
+        });
+
+        // Re-enable button after the scale finishes
+        const totalMs = noteNames.length * duration * 1000 + 150;
+        setTimeout(() => {
+            setStatus(STATUS.IDLE);
+            setButtonDisabled(false);
+        }, totalMs);
     };
 
     return (
@@ -59,7 +90,10 @@ const Player = () => {
                         defaultOptionText="Please select mode"
                         value={selectedMode}
                         options={modeChoices}
-                        onChange={handleSelectChange([setSelectedMode])}
+                        onChange={(e) => {
+                            setSelectedMode(e.target.value);
+                            setButtonDisabled(!(e.target.value && selectedKey));
+                        }}
                     />
                 </div>
                 <div>
@@ -69,24 +103,27 @@ const Player = () => {
                         defaultOptionText="Please select key"
                         value={selectedKey}
                         options={keyChoices}
-                        onChange={handleSelectChange([setSelectedKey])}
+                        onChange={(e) => {
+                            setSelectedKey(e.target.value);
+                            setButtonDisabled(!(selectedMode && e.target.value));
+                        }}
                     />
                 </div>
                 <div>
                     <FormButton
                         isSubmitting={status === STATUS.SUBMITTING}
-                        disabled={buttonDisabled}
+                        disabled={!bothSelected || buttonDisabled}
                         text="Play your mode!"
                     />
-                    {showMidiGenerator && <MidiGenerator noteNumber={64} />}
-
                 </div>
             </FormControl>
-            <MidiComponent/>
+            {!audioReady && (
+                <p style={{ fontSize: "0.85rem", color: "#666" }}>
+                    Click Play to start audio (browser requirement).
+                </p>
+            )}
         </form>
-
-);
-}
-
+    );
+};
 
 export default Player;
